@@ -11,19 +11,19 @@
 <script	src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.14.3/xlsx.full.min.js"></script>
 <script	src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.8/FileSaver.min.js"></script>
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-<script src="https://kit.fontawesome.com/a4a9a94dd2.js"	crossorigin="anonymous"></script>
+<script src="https://kit.fontawesome.com/a4a9a94dd2.js"></script>
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <!-- 반응형 웹페이지 -->
-<title>AudioInspect</title>
+<title>AudioInspect File Comparison</title>
 </head>
 <body>
 	<div class="topMenuWrapper">
 		<h1>AudioInspect</h1>
 		<ul class="topMenu">
-			<li><a href="">음성파일 비교</a></li>
-			<li><a href="">음성파일 관리</a></li>
+			<li><a href="index.jsp">음성파일 비교</a></li>
+			<li><a href="manage.jsp">음성파일 관리</a></li>
 		</ul>
 	</div>
 	
