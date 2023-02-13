@@ -99,6 +99,10 @@ function MetaDataFromDB(standOrCompare, selectedFileName, selectedFileId, select
 					//comparefilesData.metaData: fileManage.js에서 호출
 					var index = comparefilesData.fileName.indexOf(selectedFileName)
 					comparefilesData.metaData[index] = xml
+					
+					console.log("파일 이름 : " + selectedFileName)
+					console.log("index : " + index)
+					console.log("comparefilesData.fileName : " + comparefilesData.fileName[index])
 					break				
 			}
 		},

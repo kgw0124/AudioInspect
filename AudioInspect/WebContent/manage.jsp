@@ -1,5 +1,19 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
 <%@ page import="java.util.*"%>
+<%@ page import="java.sql.*"%>
+<%!Connection conn = null;
+	Statement stmt = null;
+	ResultSet rs = null;
+	String url = "jdbc:mysql://localhost:3306/audioinspect?serverTimezone=UTC";
+	String user = "root";
+	String password = "1234";
+	String initQueryForOriginal = "select sf.file_name, sf.recording_mode, sf.recording_quality, sf.file_type, sd.smart_device_model_name, sd.smart_device_model_number, osd.os_name, osd.os_version\n"
+			+ "from original_speech_file sf, recording_editing_device red, smart_device sd, os_for_smart_devices osd\n"
+			+ "where sf.recording_device_id=red.recording_editing_device_id and red.smart_device_id = sd.smart_device_id and red.os_id = osd.os_id;";
+	String initQueryForEdited = "select esf.edited_speech_file_id, esf.file_name, esf.editing_app_name, esf.recording_mode, esf.recording_quality, esf.file_type, sd.smart_device_model_name, sd.smart_device_model_number, osd.os_name, osd.os_version\n"
+			+ "from edited_speech_file esf, recording_editing_device red, smart_device sd, os_for_smart_devices osd\n"
+			+ "where esf.editing_device_id=red.recording_editing_device_id and red.smart_device_id = sd.smart_device_id and red.os_id = osd.os_id;";
+%>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -42,12 +56,10 @@
 		</button>
 	</div>
 
-
 	<div>
-		<table width="100%" border="0" cellspacig="0" cellpadding="0" class="table table-striped table-hover">
+		<table style ="width: 100%; border: 0; cellspacig: 0; cellpadding: 0;" class="table table-striped table-hover">
 			<thead>
 				<tr>
-					<th><span class="custom-checkbox"> <id="selectAll"></span></th>
 					<th>No.</th>
 					<th>파일명</th>
 					<th>확장자</th>
@@ -60,136 +72,73 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr onclick="javascript:getReserveInfo(this);">
-					<td><span class="custom-checkbox"> <id
-								="row1" name="options[]" value="1"></span></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-
-				</tr>
-				<tr onclick="javascript:getReserveInfo(this);">
-					<td><span class="custom-checkbox"> <id
-								="row2" name="options[]" value="1"></span></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-				</tr>
-				<tr onclick="javascript:getReserveInfo(this);">
-					<td><span class="custom-checkbox"> <id
-								="row3" name="options[]" value="1"></span></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-				</tr>
-				<tr>
-					<td><span class="custom-checkbox"> <id
-								="row4" name="options[]" value="1"></span></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-				</tr>
-				<tr onclick="javascript:getReserveInfo(this);">
-					<td><span class="custom-checkbox"> <id
-								="row5" name="options[]" value="1"></span></td>
-
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-				</tr>
 			</tbody>
+			<%
+			try {
+				Class.forName("com.mysql.cj.jdbc.Driver");
+				conn = DriverManager.getConnection(url, user, password);
+				stmt = conn.createStatement();
+				rs = stmt.executeQuery(initQueryForOriginal);
+				while (rs.next()) {
+			%>
+			<tr>
+				<td>index</td>
+				<td><%=rs.getString("file_name")%></td>
+				<td><%=rs.getString("file_type")%></td>
+				<td><%=rs.getString("smart_device_model_name")%></td>
+				<td><%=rs.getString("smart_device_model_number")%></td>
+				<td><%=rs.getString("os_name") + " " + rs.getString("os_version")%></td>
+				<td><%=rs.getString("recording_mode") + " / " + rs.getString("recording_quality")%></td>
+				<td>원본</td>
+			</tr>
+			<%
+				}
+			} catch (SQLException se) {
+			se.printStackTrace();
+			} finally {
+				try {
+				if (rs != null)
+					rs.close();
+				if (stmt != null)
+					rs.close();
+				if (conn != null)
+					rs.close();
+				} catch (SQLException se) {
+				se.printStackTrace();
+				}
+			}
+			%>
 		</table>
 	</div>
 
-
-	<script type="text/javascript">
-		// 선택시 표시
-
-		function getReserveInfo(target) {
-			var tbody = target.parentNode;
-			var trs = tbody.getElementsByTagName('tr');
-
-			var backColor = "#ffffff";
-			var textColor = "black";
-			var orgBColor = "#e9e9e9";
-			var orgTColor = "#ffffff";
-
-			var no = "";
-			var no1 = "";
-
-			for (var i = 0; i < trs.length; i++) {
-				if (trs[i] != target) {
-					trs[i].style.backgroundColor = backColor;
-					trs[i].style.color = textColor;
-				} else {
-					trs[i].style.backgroundColor = orgBColor;
-					trs[i].style.color = orgTColor;
-					var td = trs[i].getElementsByTagName('td');
-					no = td[0].innerText;
-					no1 = td[1].innerText;
-				}
-			}
-		}
-	</script>
-
-
-
-
-
-
-
-	<!-- Edit Modal HTML -->
+	<!-- Add Modal HTML -->
 	<div id="addModal" class="modal fade">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<form>
 					<div class="modal-header">
 						<h4 class="modal-title">Add</h4>
-						<button type="button" class="close" data-dismiss="modal"
-							aria-hidden="true">&times;</button>
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 					</div>
 					<div class="modal-body">
 						<div class="form-group">
 							<p>
 								<b>파일 편집 여부</b>
 							</p>
-							<label><input type="radio" id="orign" name="chk_info"
-								value="원본" checked="checked" onchange="setDisplay()">원본</label>
-							<label><input type="radio" id="edit" name="chk_info"
-								value="편집본" onchange="setDisplay()">편집본</label>
+							<label>
+								<input type="radio" id="orign" name="chk_info" value="원본" checked="checked" onchange="setDisplay()">
+								원본
+							</label>
+							<label>
+								<input type="radio" id="edit" name="chk_info" value="편집본" onchange="setDisplay()">
+								편집본
+							</label>
 						</div>
 						<div class="form-group">
 							<p>
 								<b>파일 경로</b>
 							</p>
 							<input type="file" name="profile" accept=".m4a">
-
-
 						</div>
 						<div class="form-group">
 							<p>
@@ -197,21 +146,18 @@
 							</p>
 							<input type="text" class="form-control" required>
 						</div>
-
 						<div class="form-group">
 							<p>
 								<b>녹음 기종 넘버 *</b>
 							</p>
 							<input type="text" class="form-control" required>
 						</div>
-
 						<div class="form-group">
 							<p>
 								<b>파일 이름 *</b>
 							</p>
 							<input type="text" class="form-control" required>
 						</div>
-
 						<div class="form-group">
 							<p>
 								<b>녹음 기기 제조사 *</b>
@@ -221,7 +167,6 @@
 								<option value="android">Android</option>
 							</select>
 						</div>
-
 						<div class="form-group">
 							<p>
 								<b>녹음 os 이름 *</b>
@@ -231,21 +176,18 @@
 								<option value="android">Android</option>
 							</select>
 						</div>
-
 						<div class="form-group">
 							<p>
 								<b>녹음 os 버전 정보 *</b>
 							</p>
 							<input type="text" class="form-control" required>
 						</div>
-
 						<div class="form-group">
 							<p>
 								<b>녹음 모드</b>
 							</p>
 							<input type="text" class="form-control" required>
 						</div>
-
 						<div class="form-group">
 							<p>
 								<b>녹음 퀄리티</b>
@@ -260,7 +202,7 @@
 			</div>
 		</div>
 	</div>
-
+	
 	<!-- Edit Modal HTML -->
 	<div id="editModal" class="modal fade">
 		<div class="modal-dialog">

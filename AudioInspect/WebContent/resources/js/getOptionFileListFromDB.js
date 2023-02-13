@@ -4,91 +4,113 @@ var initQueryForOriginal = "select sf.original_speech_file_id, sf.file_name, sf.
 var initQueryForEdited = "select esf.edited_speech_file_id, esf.file_name, esf.editing_app_name, esf.recording_mode, esf.recording_quality, esf.file_type, sd.smart_device_model_name, sd.smart_device_model_number, osd.os_name, osd.os_version\n"
 	+ "from edited_speech_file esf, recording_editing_device red, smart_device sd, os_for_smart_devices osd\n"
 	+ "where esf.editing_device_id=red.recording_editing_device_id and red.smart_device_id = sd.smart_device_id and red.os_id = osd.os_id"
-var selectmanufacturer;
-var selectmanufacturer2;
-var selectEdit;
-var selectEdit2;
-var selectOS;
-var selectOS2;
-var search_file_name;
-var search_file_name2;
-var search_model_name;
-var search_model_name2;
-var search_model_number;
-var search_model_number2;
-var select_recordmode;
-var select_recordmode2;
-var select_recordQ;
-var select_recordQ2;
-var select_Android;
-var select_Android2;
-var select_iOS;
-var select_iOS2;
+var selectmanufacturer = [];
+var selectmanufacturer2 = [];
+var selectEdit = "";
+var selectEdit2 = [];
+var selectOS = "";
+var selectOS2 = "";
+var search_file_name = "";
+var search_file_name2 = "";
+var search_model_name = "";
+var search_model_name2 = "";
+var search_model_number = "";
+var search_model_number2 = "";
+var select_recordmode = "";
+var select_recordmode2 = "";
+var select_recordQ = "";
+var select_recordQ2 = "";
+var record = "";
+var record2 = "";
+var select_Android = "";
+var select_Android2 = "";
+var select_Android3 = "";
+var select_Android4 = "";
+var select_iOS = "";
+var select_iOS2 = "";
 var OSArr = [];
 var manuArr = [];
+var resultarr = [];
+var resultarr_2 = [];
+var resultarr_3 = [];
+var resultarr_4 = [];
+var resultarr_5 = [];
 
 
 function manuclick() {
-	var resultarr = [];
-	var resultarr_2 = [];
 	$(".result_list").empty();
+	resultarr = [];
+	resultarr_2 = [];
+	resultarr_3 = [];
+	resultarr_4 = [];
+	resultarr_5 = [];
 	// 선택된 목록 가져오기
 	const query = 'input[type="checkbox"]:checked';
 	const selectedEls = document.querySelectorAll(query);
 	// 선택된 목록에서 value 찾기
 	let result = "";
 	let result2 = '';
+	let result3 = '';
+	let result4 = '';
 	selectedEls.forEach((el) => {
 		result = el.name + '';
 		resultarr.push(result);
 		result2 = el.className + '';
 		resultarr_2.push(result2)
+		result3 = el.className + '';
+		if (result3 == "manufacturerlist") {
+			resultarr_3.push(" and sf.recording_app_manufacturer='" + result + "'")
+			resultarr_4.push(" and sf.recording_app_manufacturer='" + result + "'")
+		}
+		result4 = el.className + '';
+		if (result4 == "editlist2") {
+			resultarr_5.push(" and esf.editing_app_name like'%" + result + "%'")
+		}
 	});
 	for (var i = 0; i < resultarr.length; i++) {
 		if (resultarr_2[i] == "manufacturerlist") {
 			if (resultarr[i] == "manuAll") {
-				getFileListFromDB(initQueryForOriginal)
-				getFileListFromDB(initQueryForEdited)
 				$("input[id = 'nonck']").prop("checked", false);
 			} else {
 				if (resultarr[i] == "manuAll") {
 					resultarr.splice(0)
 				}
-				selectmanufacturer = initQueryForOriginal + " and sf.recording_app_manufacturer='" + resultarr[i] + "'";
-				selectmanufacturer2 = " and esf.editing_app_manufacturer='" + resultarr[i] + "'";
-				getFileListFromDB(selectmanufacturer)
-				getFileListFromDB(selectmanufacturer2)
+				selectmanufacturer[i] = resultarr_3[i]
+				selectmanufacturer2[i] = resultarr_4[i]
 				$("input[name = 'manuAll']").prop("checked", false);
 			}
 		}
 		if (resultarr_2[i] == "editlist") {
-			if (resultarr[i] == "editAll") {
+			if (resultarr[i] == "selectAll") {
 				$("input[id = 'editnonck']").prop("checked", false);
-				getFileListFromDB(initQueryForOriginal)
-				getFileListFromDB(initQueryForEdited)
-			} if (resultarr[i] == "original") {
-				$("input[name='editAll']").prop("checked", false);
-				getFileListFromDB(initQueryForOriginal)
-			} if (resultarr[i] == "edit") {
-				$("input[name='editAll']").prop("checked", false);
-				getFileListFromDB(initQueryForEdited)
 			}
-			else {
-				$(".result_list").empty();
-				selectEdit = initQueryForEdited + " and esf.editing_app_name='" + resultarr[i] + "'";
-				getFileListFromDB(selectEdit)
+			if (resultarr[i] == "selectorigin") {
+				$("input[name='selectAll']").prop("checked", false);
+				$("input[name='edit']").prop("checked", false);
+				const checkbox5 = $(".editlist2");
+				for (var j = 0; j < checkbox5.length; j++) {
+					checkbox5[j].checked = false;
+				}
+			}
+			if (resultarr[i] == "edit") {
+				$("input[name='selectAll']").prop("checked", false);
+				$("input[name='selectorigin']").prop("checked", false);
 			}
 		}
 		if (resultarr_2[i] == "editlist2") {
-			if (resultarr[i] == "editAll2") {
+			if (resultarr[i] == "selectedit") {
+				$("input[name='selectAll']").prop("checked", false);
+				$("input[name='selectorigin']").prop("checked", false);
 				$("input[id = 'sweditnonck']").prop("checked", false);
-				getFileListFromDB(initQueryForEdited)
 			}
 			else {
+				$("input[name='edit']").prop("checked", true);
+				$("input[name='selectAll']").prop("checked", false);
+				$("input[name='selectorigin']").prop("checked", false);
 				$(".result_list").empty();
-				$("input[name='editAll2']").prop("checked", false);
-				selectEdit2 = initQueryForEdited + " and esf.editing_app_name='" + resultarr[i] + "'";
-				getFileListFromDB(selectEdit2)
+				$("input[name='selectedit']").prop("checked", false);
+				//selectEdit2[i - selectmanufacturer2.length] = resultarr_5[i]
+				//resultarr_5[i] = resultarr_5[i]
 			}
 		}
 		if (resultarr_2[i] == "OSlist") {
@@ -100,170 +122,154 @@ function manuclick() {
 					$("input[class='select_OS']").prop("checked", false);
 				}
 				$("input[id='OSnonck']").prop("checked", false);
-				getFileListFromDB(initQueryForOriginal)
-				getFileListFromDB(initQueryForEdited)
 			} else {
 				$("input[name='OSAll']").prop("checked", false);
-				selectOS = initQueryForOriginal + " and osd.os_name='" + resultarr[i] + "'";
-				selectOS2 = initQueryForEdited + " and osd.os_name='" + resultarr[i] + "'";
-				getFileListFromDB(selectOS)
-				getFileListFromDB(selectOS2)
+				selectOS = " and osd.os_name='" + resultarr[i] + "'";
+				selectOS2 = " and osd.os_name='" + resultarr[i] + "'";
 			}
 		}
 		if (resultarr_2[i] == "text_search") {
 			if (resultarr[i] == "file_name") {
 				$("input[name='record_device']").prop("checked", false);
 				$("input[name='record_device_num']").prop("checked", false);
-				$(".search_button").click(function() {
-					$(".result_list").empty();
-					var search = $(".search_text").val();
-					search_file_name = initQueryForOriginal + " and sf.file_name like'%" + search + "%'";
-					search_file_name2 = initQueryForEdited + " and esf.file_name like'%" + search + "%'";
-					getFileListFromDB(search_file_name)
-					getFileListFromDB(search_file_name2)
+				var search = $(".search_text").val();
+				search_file_name = " and sf.file_name like'%" + search + "%'";
+				search_file_name2 = " and esf.file_name like'%" + search + "%'";
+				search_model_name = "";
+				search_model_name2 = "";
+				search_model_number = "";
+				search_model_number2 = "";
 
-				})
 			}
 			if (resultarr[i] == "record_device") {
 				$("input[name='file_name']").prop("checked", false);
 				$("input[name='record_device_num']").prop("checked", false);
-				$(".search_button").click(function() {
-					$(".result_list").empty();
-					var search = $(".search_text").val();
-					search_model_name = initQueryForOriginal + " and sd.smart_device_model_name like'%" + search + "%'";
-					search_model_name2 = initQueryForEdited + " and sd.smart_device_model_name like'%" + search + "%'";
-					getFileListFromDB(search_model_name)
-					getFileListFromDB(search_model_name2)
+				var search2 = $(".search_text").val();
+				search_model_name = " and sd.smart_device_model_name like'%" + search2 + "%'";
+				search_model_name2 = " and sd.smart_device_model_name like'%" + search2 + "%'";
+				search_file_name = "";
+				search_file_name2 = "";
+				search_model_number = "";
+				search_model_number2 = "";
 
-				})
 			}
 			if (resultarr[i] == "record_device_num") {
 				$("input[name='file_name']").prop("checked", false);
 				$("input[name='record_device']").prop("checked", false);
-				$(".search_button").click(function() {
-					$(".result_list").empty();
-					var search = $(".search_text").val();
-					search_model_number = initQueryForOriginal + " and sd.smart_device_model_number like'%" + search + "%'";
-					search_model_number2 = initQueryForEdited + " and sd.smart_device_model_number like'%" + search + "%'";
-					getFileListFromDB(search_model_number)
-					getFileListFromDB(search_model_number2)
-
-				})
+				var search3 = $(".search_text").val();
+				search_model_number = " and sd.smart_device_model_number like'%" + search3 + "%'";
+				search_model_number2 = " and sd.smart_device_model_number like'%" + search3 + "%'";
+				search_file_name = "";
+				search_file_name2 = "";
+				search_model_name = "";
+				search_model_name2 = "";
 			}
 		}
-		if (resultarr[i].includes("All")) {
-			$(".result_list").empty();
-			console.log("All")
-			//getFileListFromDB(initQueryForOriginal)
-			//getFileListFromDB(initQueryForEdited)
+		var origin = [];
+		var edited = [];
+		if (resultarr_2[i].includes("edit")) {
+			if (resultarr[i].includes("All")) {
+				$(".result_list").empty();
+				origin = initQueryForOriginal;
+				edited = initQueryForEdited;
+				getFileListFromDB(origin)
+				getFileListFromDB(edited)
+			}
+			/*else if (resultarr[i].includes("origin")) {
+				$(".result_list").empty();
+				if (selectmanufacturer.length > 0) {
+					for (var n = 0; n < selectmanufacturer.length; n++) {
+						origin[n] = initQueryForOriginal + record + selectmanufacturer[n] + selectOS + search_file_name + search_model_name + search_model_number + select_Android + select_Android3 + select_iOS;
+					}
+				}
+				else {
+					origin[0] = initQueryForOriginal + record + selectOS + search_file_name + search_model_name + search_model_number + select_Android + select_Android3 + select_iOS;
+				}
+				edit = "";
+			}*/
+			else {
+				$(".result_list").empty();
+				if (selectmanufacturer2.length > 0) {
+					for (var n = 1; n < selectmanufacturer2.length + 1; n++) {
+						if (resultarr_5.length > 0) {
+							for (var m = 1; m < resultarr_5.length + 1; m++) {
+								edited[n * m] = edited[n - 1] + resultarr_5[m - 1]
+							}
+						}
+						else {
+							edited[n - 1] = initQueryForEdited + record2 + selectmanufacturer2[n - 1] + selectOS2 + search_file_name2 + search_model_name2 + search_model_number2 + select_Android2 + select_Android4 + select_iOS2;
+						}
+					}
+				}
+				else {
+					var EditedQ = initQueryForEdited + record2 + selectOS2 + search_file_name2 + search_model_name2 + search_model_number2 + select_Android2 + select_Android4 + select_iOS2;
+					if (resultarr_5.length > 0) {
+						for (var m = 0; m < resultarr_5.length; m++) {
+							edited[m] = EditedQ + resultarr_5[m]
+						}
+					}
+				}
+				origin = ""
+			}
 		}
-		if (resultarr[i].includes("original")) {
-			$(".result_list").empty();
-			console.log("original")
-			//getFileListFromDB(initQueryForOriginal)
+		else {
+			if (resultarr[i].includes("origin")) {
+				$(".result_list").empty();
+				if (selectmanufacturer.length > 0) {
+					for (var n = 0; n < selectmanufacturer.length; n++) {
+						origin[n] = initQueryForOriginal + record + selectmanufacturer[n] + selectOS + search_file_name + search_model_name + search_model_number + select_Android + select_Android3 + select_iOS;
+					}
+				}
+				else {
+					origin[0] = initQueryForOriginal + record + selectOS + search_file_name + search_model_name + search_model_number + select_Android + select_Android3 + select_iOS;
+				}
+				edit = "";
+			}
+			else {
+				$(".result_list").empty();
+				if (selectmanufacturer.length > 0) {
+					for (var n = 0; n < selectmanufacturer.length; n++) {
+						origin[n] = initQueryForOriginal + record + selectmanufacturer[n] + selectOS + search_file_name + search_model_name + search_model_number + select_Android + select_Android3 + select_iOS;
+					}
+				}
+				else {
+					origin[0] = initQueryForOriginal + record + selectOS + search_file_name + search_model_name + search_model_number + select_Android + select_Android3 + select_iOS;
+				}
+				if (selectmanufacturer2.length > 0) {
+					for (var n = 1; n < selectmanufacturer2.length + 1; n++) {
+						if (resultarr_5.length > 0) {
+							for (var m = 1; m < resultarr_5.length + 1; m++) {
+								edited[n * m] = edited[n - 1] + resultarr_5[m - 1]
+							}
+						}
+						else {
+							edited[n - 1] = initQueryForEdited + record2 + selectmanufacturer2[n - 1] + selectOS2 + search_file_name2 + search_model_name2 + search_model_number2 + select_Android2 + select_Android4 + select_iOS2;
+						}
+					}
+				}
+				else {
+					var EditedQ = initQueryForEdited + record2 + selectOS2 + search_file_name2 + search_model_name2 + search_model_number2 + select_Android2 + select_Android4 + select_iOS2;
+					if (resultarr_5.length > 0) {
+						for (var m = 0; m < resultarr_5.length; m++) {
+							edited[m] = EditedQ + resultarr_5[m]
+						}
+					}
+				}
+				//origin = "";
+				//origin = initQueryForOriginal + record + selectmanufacturer + selectEdit2 + selectOS + search_file_name + search_model_name + search_model_number + select_Android + select_Android3 + select_iOS;
+				//edited = initQueryForEdited + record2 + selectmanufacturer2 + selectEdit2 + selectOS2 + search_file_name2 + search_model_name2 + search_model_number2 + select_Android2 + select_Android4 + select_iOS2;
+			}
 		}
-		if (resultarr[i].includes("edit")) {
-			$(".result_list").empty();
-			console.log("edit")
-			//getFileListFromDB(initQueryForEdited)
-		}
+	}
+	for (var i = 0; i < origin.length; i++) {
+		getFileListFromDB(origin[i]);
+	}
+	for (var j = 0; j < edited.length; j++) {
+		getFileListFromDB(edited[j]);
 	}
 }
 
-/*
-function editclick() {
-   var resultarr2 = [];
-   $("input[name='editAll2']").prop("checked", false);
-   $("input[id = 'sweditnonck']").prop("checked", false);
-   $(".result_list").empty();
-   const query = 'input[class="editlist"]:checked';
-   const selectedEls =
-	  document.querySelectorAll(query);
-   let result = '';
-   selectedEls.forEach((el) => {
-	  result = el.name + '';
-	  resultarr2.push(result);
-   });
-   for (var i = 0; i < resultarr2.length; i++) {
-	  if (resultarr2[i] == "editAll") {
-		 $("input[id = 'editnonck']").prop("checked", false);
-		 getFileListFromDB(initQueryForOriginal)
-		 getFileListFromDB(initQueryForEdited)
-	  } if (resultarr2[i] == "original") {
-		 $("input[name='editAll']").prop("checked", false);
-		 getFileListFromDB(initQueryForOriginal)
-	  } if (resultarr2[i] == "edit") {
-		 $("input[name='editAll']").prop("checked", false);
-		 getFileListFromDB(initQueryForEdited)
-	  }
-	  else {
-		 $(".result_list").empty();
-		 //$("input[id = 'editnonck']").prop("checked", false);
-		 //$("input[name='editAll']").prop("checked", false);
-		 selectEdit = initQueryForEdited + " and esf.editing_app_name='" + resultarr2[i] + "'";
-		 getFileListFromDB(selectEdit)
-	  }
-   }
-}
-function editclick2() {
-   $("input[name='editAll']").prop("checked", false);
-   $("input[id = 'editnonck']").prop("checked", false);
-   $(".result_list").empty();
-   const query = 'input[class="editlist2"]:checked';
-   const selectedEls =
-	  document.querySelectorAll(query);
-   let result = '';
-   var resultarr3 = [];
-   selectedEls.forEach((el) => {
-	  result = el.name + '';
-	  resultarr3.push(result);
-   });
-   for (var i = 0; i < resultarr3.length; i++) {
-	  if (resultarr3[i] == "editAll2") {
-		 $("input[id = 'sweditnonck']").prop("checked", false);
-		 getFileListFromDB(initQueryForEdited)
-	  }
-	  else {
-		 $(".result_list").empty();
-		 $("input[name='editAll2']").prop("checked", false);
-		 selectEdit2 = initQueryForEdited + " and esf.editing_app_name='" + resultarr3[i] + "'";
-		 getFileListFromDB(selectEdit2)
-	  }
-   }
-}
-function OSclick() {
-   $(".result_list").empty();
-   const query = 'input[class="OSlist"]:checked';
-   const selectedEls =
-	  document.querySelectorAll(query);
-   let result = '';
-   var resultarr4 = [];
-   selectedEls.forEach((el) => {
-	  result = el.name + '';
-	  resultarr4.push(result);
-   });
-   for (var i = 0; i < resultarr4.length; i++) {
-	  if (resultarr4[i] == "OSAll") {
-		 if ($(".input_OS").is(":checked") == true) {
-			$("input[class='input_OS']").prop("checked", false);
-		 }
-		 if ($(".select_OS").is(":checked") == true) {
-			$("input[class='select_OS']").prop("checked", false);
-		 }
-		 $("input[id='OSnonck']").prop("checked", false);
-		 getFileListFromDB(initQueryForOriginal)
-		 getFileListFromDB(initQueryForEdited)
-	  } else {
-		 $("input[name='OSAll']").prop("checked", false);
-		 selectOS = initQueryForOriginal + " and osd.os_name='" + resultarr4[i] + "'";
-		 selectOS2 = initQueryForEdited + " and osd.os_name='" + resultarr4[i] + "'";
-		 getFileListFromDB(selectOS)
-		 getFileListFromDB(selectOS2)
-	  }
-   }
-}*/
 function OS_number() {
-	$(".result_list").empty();
 	if ($(".input_OS").is(":checked") == true) {
 		$("input[class='input_OS']").prop("checked", false);
 	}
@@ -274,17 +280,22 @@ function OS_number() {
 		$("input[name='OSAll']").prop("checked", false);
 	}
 	var OS_version = $(".selectOS").val()
-	/*selectmanufacturer = " and osd.os_version like '%" + OS_version + "'";
-	OSArr.push(selectmanufacturer)
-	//selectmanufacturer2 = " and osd.os_version like '%" + OS_version + "'";
-	allSelect()*/
-	select_Android = initQueryForOriginal + " and osd.os_version like '%" + OS_version + "' ";
-	select_Android2 = initQueryForEdited + " and osd.os_version like '%" + OS_version + "'";
-	getFileListFromDB(select_Android)
-	getFileListFromDB(select_Android2)
+	var OS_And_iOS = $("select[class = selectOS] option:selected").text();
+	if (OS_And_iOS.includes("Android")) {
+		$("input[name = 'Android']").prop("checked", true);
+		$("input[name = 'iOS']").prop("checked", false);
+	}
+	else if (OS_And_iOS.includes("iOS")) {
+		$("input[name = 'iOS']").prop("checked", true);
+		$("input[name = 'Android']").prop("checked", false);
+	}
+	select_Android3 = "";
+	select_Android4 = "";
+	select_Android = " and osd.os_version like '%" + OS_version + "' ";
+	select_Android2 = " and osd.os_version like '%" + OS_version + "'";
+	manuclick();
 }
 function OS_number2() {
-	$(".result_list").empty();
 	if ($(".input_OS").is(":checked") == false) {
 		$("input[class='input_OS']").prop("checked", true);
 	}
@@ -295,95 +306,15 @@ function OS_number2() {
 		$("input[name='OSAll']").prop("checked", false);
 	}
 	var OS_version2 = $(".search").val();
-	var select_Android3 = initQueryForOriginal + " and osd.os_version like '%" + OS_version2 + "%'";
-	var select_Android4 = initQueryForEdited + " and osd.os_version like '%" + OS_version2 + "%'";
-	getFileListFromDB(select_Android3)
-	getFileListFromDB(select_Android4)
+	select_Android = "";
+	select_Android2 = "";
+	select_Android3 = " and osd.os_version like '%" + OS_version2 + "%'";
+	select_Android4 = " and osd.os_version like '%" + OS_version2 + "%'";
+	manuclick();
 }
 
-/*
-function searchclick() {
-   $(".result_list").empty();
-   const query = 'input[class="searchlist"]:checked';
-   const selectedEls = document.querySelectorAll(query);
-   let result = '';
-   var resultarr5 = [];
-   selectedEls.forEach((el) => {
-	  result = el.name + '';
-	  resultarr5.push(result);
-   });
-   for (var i = 0; i < resultarr5.length; i++) {
-	  if (resultarr5[i] == "searchAll") {
-		 $("input[id='searchnonck']").prop("checked", false);
-		 getFileListFromDB(initQueryForOriginal)
-		 getFileListFromDB(initQueryForEdited)
-	  }
-	  if (resultarr5[i] == "original") {
-		 $("input[name='searchAll']").prop("checked", false);
-		 getFileListFromDB(initQueryForOriginal)
-	  }
-	  if (resultarr5[i] == "edit") {
-		 $("input[name='searchAll']").prop("checked", false);
-		 getFileListFromDB(initQueryForEdited)
-	  }
-   }
-}*/
-/*
-function textclick() {
-   const query = 'input[class="text_search"]:checked';
-   const selectedEls = document.querySelectorAll(query);
-   let result = '';
-   var resultarr6 = [];
-   selectedEls.forEach((el) => {
-	  result = el.name + '';
-	  resultarr6.push(result);
-   });
-   for (var i = 0; i < resultarr6.length; i++) {
-	  if (resultarr6[i] == "file_name") {
-		 $("input[name='record_device']").prop("checked", false);
-		 $("input[name='record_device_num']").prop("checked", false);
-		 $(".search_button").click(function() {
-			$(".result_list").empty();
-			var search = $(".search_text").val();
-			search_file_name = initQueryForOriginal + " and sf.file_name like'%" + search + "%'";
-			search_file_name2 = initQueryForEdited + " and esf.file_name like'%" + search + "%'";
-			getFileListFromDB(search_file_name)
-			getFileListFromDB(search_file_name2)
-
-		 })
-	  }
-	  if (resultarr6[i] == "record_device") {
-		 $("input[name='file_name']").prop("checked", false);
-		 $("input[name='record_device_num']").prop("checked", false);
-		 $(".search_button").click(function() {
-			$(".result_list").empty();
-			var search = $(".search_text").val();
-			search_model_name = initQueryForOriginal + " and sd.smart_device_model_name like'%" + search + "%'";
-			search_model_name2 = initQueryForEdited + " and sd.smart_device_model_name like'%" + search + "%'";
-			getFileListFromDB(search_model_name)
-			getFileListFromDB(search_model_name2)
-
-		 })
-	  }
-	  if (resultarr6[i] == "record_device_num") {
-		 $("input[name='file_name']").prop("checked", false);
-		 $("input[name='record_device']").prop("checked", false);
-		 $(".search_button").click(function() {
-			$(".result_list").empty();
-			var search = $(".search_text").val();
-			search_model_number = initQueryForOriginal + " and sd.smart_device_model_number like'%" + search + "%'";
-			search_model_number2 = initQueryForEdited + " and sd.smart_device_model_number like'%" + search + "%'";
-			getFileListFromDB(search_model_number)
-			getFileListFromDB(search_model_number2)
-
-		 })
-	  }
-   }
-
-}*/
 
 function recordclick() {
-	$(".result_list").empty();
 	const query = 'input[class="recordlist"]:checked';
 	const selectedEls = document.querySelectorAll(query);
 	let result = '';
@@ -391,59 +322,38 @@ function recordclick() {
 		result = el.name + '';
 	});
 	if (result == "recordAll") {
-		getFileListFromDB(initQueryForOriginal)
-		getFileListFromDB(initQueryForEdited)
+		record = ""
+		record2 = ""
 	}
+	manuclick()
 }
-
 function recordmode() {
-	$(".result_list").empty();
+	if ($("input[class='recordlist']").is(":checked") == true) {
+		$("input[class='recordlist']").prop("checked", false);
+	}
 	var mode = $(".recordmode").val();
-	if (mode == "recordmode_All") {
-		getFileListFromDB(initQueryForOriginal)
-		getFileListFromDB(initQueryForEdited)
-	} else {
-		select_recordmode = initQueryForOriginal + " and sf.recording_mode='" + mode + "'";
-		select_recordmode2 = initQueryForEdited + " and esf.recording_mode='" + mode + "'";
-		getFileListFromDB(select_recordmode)
-		getFileListFromDB(select_recordmode2)
-	}
-}
-function recordQ() {
+	var mode2 = $(".recordQ").val();
 	$(".result_list").empty();
-	var mode = $(".recordQ").val();
-	if (mode == "recordQ_All") {
-		getFileListFromDB(initQueryForOriginal)
-		getFileListFromDB(initQueryForEdited)
+	if (mode == "recordmode_All") {
+		select_recordmode = "";
+		select_recordmode2 = "";
 	} else {
-		select_recordQ = initQueryForOriginal + " and sf.recording_quality='" + mode + "'";
-		select_recordQ2 = initQueryForEdited + " and esf.recording_quality='" + mode + "'";
-		getFileListFromDB(select_recordQ)
-		getFileListFromDB(select_recordQ2)
+		select_recordmode = " and sf.recording_mode='" + mode + "'";
+		select_recordmode2 = " and esf.recording_mode='" + mode + "'";
 	}
+	if (mode2 == "recordQ_All") {
+		select_recordQ = "";
+		select_recordQ2 = "";
+	} else {
+		select_recordQ = " and sf.recording_quality='" + mode2 + "'";
+		select_recordQ2 = " and esf.recording_quality='" + mode2 + "'";
+	}
+	record = select_recordmode + select_recordQ;
+	record2 = select_recordmode2 + select_recordQ2;
+	manuclick()
 }
 
 
-/*
-function allSelect() {
-   console.log(OSArr)
-   var arr = [...new Set(manuArr)];
-   console.log(arr)
-   for (var i = 0; i < arr; i++) {
-	  var aaa = "select sf.original_speech_file_id, sf.file_name, sf.recording_mode, sf.recording_quality, sf.file_type, sd.smart_device_model_name, sd.smart_device_model_number, osd.os_name, osd.os_version\n"
-		 + "from original_speech_file sf, recording_editing_device red, smart_device sd, os_for_smart_devices osd\n"
-		 + "where (sf.recording_device_id=red.recording_editing_device_id and red.smart_device_id = sd.smart_device_id and red.os_id = osd.os_id)"
-	  //aaa += OSArr[i]
-	  aaa += arr[i]
-	  getFileListFromDB(aaa)
-	  console.log(aaa)
-   }
-   //initQueryForOriginal+= selectmanufacturer
-   //initQueryForEdited += selectmanufacturer2
-   //getFileListFromDB(initQueryForOriginal)
-   //getFileListFromDB(initQueryForEdited)
-}
-*/
 function deleteclick() {
 	$(".result_list").empty();
 	// 초기화할 checkbox 선택
@@ -451,6 +361,7 @@ function deleteclick() {
 	const checkbox2 = $(".OSlist");
 	const checkbox3 = $(".editlist");
 	const checkbox4 = $(".text_search")
+	const checkbox5 = $(".editlist2");
 	// 체크박스 목록을 순회하며 checked 값을 초기화
 	for (var i = 0; i < checkbox.length; i++) {
 		checkbox[i].checked = false;
@@ -469,6 +380,43 @@ function deleteclick() {
 			checkbox4[i].checked = false;
 		}
 	}
+	for (var i = 0; i < checkbox5.length; i++) {
+		checkbox5[i].checked = false;
+	}
+	$("input[class='select_OS']").prop("checked", false);
+	$("input[class='input_OS']").prop("checked", false);
+	$(".search").val("")
+	$(".recordmode").val("recordmode_All")
+	$(".recordQ").val("recordQ_All")
+	$(".search_text").val("")
+	selectEdit = "";
+	selectEdit2 = [];
+	selectOS = "";
+	selectOS2 = "";
+	search_file_name = "";
+	search_file_name2 = "";
+	search_model_name = "";
+	search_model_name2 = "";
+	search_model_number = "";
+	search_model_number2 = "";
+	select_recordmode = "";
+	select_recordmode2 = "";
+	select_recordQ = "";
+	select_recordQ2 = "";
+	record = "";
+	record2 = "";
+	select_Android = "";
+	select_Android2 = "";
+	select_Android3 = "";
+	select_Android4 = "";
+	select_iOS = "";
+	select_iOS2 = "";
+	selectmanufacturer = [];
+	selectmanufacturer2 = [];
+	resultarr = [];
+	resultarr_2 = [];
+	resultarr_3 = [];
+	resultarr_4 = [];
 	getFileListFromDB(initQueryForOriginal)
 	getFileListFromDB(initQueryForEdited)
 }

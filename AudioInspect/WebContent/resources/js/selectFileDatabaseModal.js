@@ -42,13 +42,13 @@ function modal_view() {
                      <li class="menu"><i class="fa-duotone fa-play"></i><a>원본/편집 설정</a>
                         <ul class="hide">
                            <li class = "select-text">표시할 파일의 원본/편집 여부를 선택해주세요.</li>
-                           <li class = "select-list"><input type="checkbox" class ="editlist" name = "editAll" onclick = "manuclick()">전체 파일 보기</li>
-                           <li class = "select-list"><input type="checkbox" class ="editlist" name = "original" id = 'editnonck' onclick = "manuclick()">원본 파일만 보기</li>
+                           <li class = "select-list"><input type="checkbox" class ="editlist" name = "selectAll" onclick = "manuclick()">전체 파일 보기</li>
+                           <li class = "select-list"><input type="checkbox" class ="editlist" name = "selectorigin" id = 'editnonck' onclick = "manuclick()">원본 파일만 보기</li>
                            <li class = "select-list"><input type="checkbox" class ="editlist" name = "edit" id = 'editnonck' onclick = "manuclick()">편집 파일만 보기</li>
                            <hr>
                            <li class = "select-text">편집 소프트웨어 설정</li>
-                           <li class = "select-list"><input type="checkbox" class ="editlist2" name = "editAll2" onclick = "manuclick()">전체 보기</li>
-                           <li class = "select-list"><input type="checkbox" class ="editlist2" name = "BuiltinSW" id = 'sweditnonck' onclick = "manuclick()">자체 탑제 소프트웨어 편집 본</li>
+                           <li class = "select-list"><input type="checkbox" class ="editlist2" name = "selectedit" onclick = "manuclick()">전체 보기</li>
+                           <li class = "select-list"><input type="checkbox" class ="editlist2" name = "Builtin" id = 'sweditnonck' onclick = "manuclick()">자체 탑제 소프트웨어 편집 본</li>
                            <li class = "select-text">PC 기반 소프트웨어</li>
                            <li class = "select-list"><input type="checkbox" class ="editlist2" name = "Gold wave" id = 'sweditnonck' onclick = "manuclick()">Gold wave</li>
                            <li class = "select-list"><input type="checkbox" class ="editlist2" name = "Wave pad" id = 'sweditnonck' onclick = "manuclick()">Wave pad</li>
@@ -56,7 +56,7 @@ function modal_view() {
                            <li class = "select-text">안드로이드 기반 소프트웨어</li>
                            <li class = "select-list"><input type="checkbox" class ="editlist2" name = "302 lock screen" id = 'sweditnonck' onclick = "manuclick()">302 lock screen</li>
                            <li class = "select-list"><input type="checkbox" class ="editlist2" name = "inshot inc." id = 'sweditnonck' onclick = "manuclick()">inshot inc.</li>
-                           <li class = "select-list"><input type="checkbox" class ="editlist2" name = "Recorder & smart apps" id = 'sweditnonck' onclick = "manuclick()">Recorder & smart apps</li>
+                           <li class = "select-list"><input type="checkbox" class ="editlist2" name = "Recorder & smart apps" id = 'sweditnonck' onclick = "manuclick()">recoder & smart apps</li>
                            <li class = "select-text">iOS 기반 소프트웨어</li>
                            <li class = "select-list"><input type="checkbox" class ="editlist2" name = "Garageband" id = 'sweditnonck' onclick = "manuclick()">Garageband</li>
                            <li class = "select-list"><input type="checkbox" class ="editlist2" name = "Lexis Audio Editor" id = 'sweditnonck' onclick = "manuclick()">Lexis Audio Editor</li>
@@ -69,7 +69,7 @@ function modal_view() {
                            <hr>
                            <li class = "select-text">검색 키워드</li>
                            <li class = "select-list"><input type="text" class="search_text" placeholder="검색 키워드를 입력해주세요."></li>
-                           <li class = "select-list"><input type="button" class = "search_button" value="검색 키워드 적용"></li>
+                           <li class = "select-list"><input type="button" class = "search_button" value="검색 키워드 적용" onclick = "manuclick()"></li>
                            <hr>
                            <li class = "select-text">검색 옵션</li>
                            <li class = "select-list"><input type="checkbox" class ="text_search" name = "file_name" id = "file_name" onclick = "manuclick()">파일 이름으로 검색</li>
@@ -88,8 +88,8 @@ function modal_view() {
                            <li class = "select-text">OS 버전</li>
                            <li class = "select-text">현재 검색 결과에 나타나는 버전만 출력됩니다.</li>
                            <li class = "select-list"><input type="checkbox" class ="OSlist" name = "OSAll"  onclick = "manuclick()">전체 보기</li>
-                           <li class = "select-list"><input type="checkbox" class = "select_OS">OS 버전 선택
-                           <select class = "selectOS">
+                           <li class = "select-list"><input type="checkbox" class = "select_OS" onchange = "OS_number()">OS 버전 선택
+                           <select class = "selectOS" onchange = "OS_number()">
                            <option value = "7.0" class = "Android">Android 7.0</option>
                            <option value = "6.0" class = "Android">Android 6.0</option>
                            <option value = "8.0" class = "Android">Android 8.0</option>
@@ -135,7 +135,7 @@ function modal_view() {
                            <option value = "13.2.3" class = "iOS">iOS 13.2.3</option>
                            <option value = "13.3" class = "iOS">iOS 13.3</option>
                            </select></li>
-                           <li class = "select-list"><input type="checkbox" class = "input_OS" onclick = "manuclick()">직접 입력<input type="text" class="search" onkeyup = "OS_number2()" placeholder="ex) 13.3"></li>
+                           <li class = "select-list"><input type="checkbox" class = "input_OS" onclick = "OS_number2()">직접 입력<input type="text" class="search" onkeyup = "OS_number2()" placeholder="ex) 13.3"></li>
                         </ul>
                      </li>
                      <li class="menu"><i class="fa-duotone fa-play"></i><a>녹음 모드 선택</a>
@@ -168,9 +168,10 @@ function modal_view() {
                            <option value = "기본(북마크 포함)">기본(북마크 포함)</option>
                            </select></li>
                            <li class = "select-list">녹음 퀄리티
-                           <select class = "recordQ" onclick = "recordQ()">
+                           <select class = "recordQ" onclick = "recordmode()">
                            <option value = "recordQ_All">전체보기</option>
                            <option value = "고품질">고품질</option>
+                           <option value = "보통">보통</option>
                            <option value = "보통(~100kbit&s, ~45MB&h)">보통(~100kbit&s, ~45MB&h)</option>
                            <option value = "일반">일반</option>
                            <option value = "낮음(~75kbit&s, ~32MB&h)">낮음(~75kbit&s, ~32MB&h)</option>
@@ -250,9 +251,9 @@ function modal_view() {
 		$(".OSlist").click(function() {
 			manuclick()
 		})
-		$(".selectOS").change(function() {
+		/*$(".selectOS").change(function(){
 			OS_number()
-		})
+		})*/
 		//체크박스 체크 초기화
 		$(".selectdelete").click(function() {
 			deleteclick()

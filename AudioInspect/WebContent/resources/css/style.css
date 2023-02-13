@@ -486,8 +486,9 @@ ul.compare_tabs li:hover {
 	margin-left: 1.0em;
 }
 
-.menu .hide {
-	columns: 2;
+.menu .hide  {
+	/*columns:2;*/
+	/*드롭다운 사용하려면 display:none 사용 필요*/
 	display: none;
 }
 
