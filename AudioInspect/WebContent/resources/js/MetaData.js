@@ -73,6 +73,55 @@ function CompMetaData(file) {
 	})
 }
 
+
+function MetaDataFromDB(standOrCompare, selectedFileName, selectedFileId, selectedFileType) {
+	$.ajax({
+		method: "POST",
+		url: '/metaDataFromDBServlet',
+		dataType: "text",
+		data: {
+			fileId: selectedFileId,
+			fileType: selectedFileType
+		},
+		success: function(data) {
+			//data = data.responseText
+			switch (standOrCompare) {
+				case "standard":
+					xml = data.split("\n")
+					xml.splice(0, 4)
+					getStandMetaDataTreeFromXML(xml)
+					//standardfilesData.metaData: fileManage.js에서 호출
+					standardfilesData.metaData.push(xml)
+					break
+				case "compare":
+					xml = data.split("\n")
+					xml.splice(0, 4)
+					getCompMetaDataTreeFromXML(selectedFileName, xml)
+					//comparefilesData.metaData: fileManage.js에서 호출
+					var index = comparefilesData.fileName.indexOf(selectedFileName)
+					comparefilesData.metaData[index] = xml
+
+					console.log("1. 파일 이름 : " + selectedFileName)
+					console.log("2. index : " + index)
+					console.log("3. comparefilesData.fileName : " + comparefilesData.fileName[index])
+					console.log("4. xml : " + xml)
+					console.log("5. data : " + data)
+					break
+			}
+		},
+		error: function(xhr, request, status, error) {
+			console.log(xhr)
+			console.log(request)
+			console.log(status)
+			console.log(error)
+			alert("ajax 에러 발생");
+			return;
+		}
+	})
+}
+
+
+/*
 function MetaDataFromDB(standOrCompare, selectedFileName, selectedFileId, selectedFileType) {
 	$.ajax({
 		method: "POST",
@@ -115,6 +164,7 @@ function MetaDataFromDB(standOrCompare, selectedFileName, selectedFileId, select
 		}
 	})
 }
+*/
 
 function getStandMetaDataTreeFromXML(xml) {
 	var comparemethod = document.querySelector(".compare_button.current").value

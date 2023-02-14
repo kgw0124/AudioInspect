@@ -242,11 +242,10 @@ function modal_view() {
 	var initQueryForEdited = "select esf.edited_speech_file_id, esf.file_name, esf.editing_app_name, esf.recording_mode, esf.recording_quality, esf.file_type, sd.smart_device_model_name, sd.smart_device_model_number, osd.os_name, osd.os_version\n"
 		+ "from edited_speech_file esf, recording_editing_device red, smart_device sd, os_for_smart_devices osd\n"
 		+ "where esf.editing_device_id=red.recording_editing_device_id and red.smart_device_id = sd.smart_device_id and red.os_id = osd.os_id;"
-
+	
 	// html dom 이 다 로딩된 후 실행된다.
 	$(document).ready(function() {
-		getFileListFromDB(initQueryForOriginal)
-		getFileListFromDB(initQueryForEdited)
+		getFileListFromDB(initQueryForOriginal, initQueryForEdited)
 		//체크박스 확인
 		$(".OSlist").click(function() {
 			manuclick()

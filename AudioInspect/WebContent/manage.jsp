@@ -13,6 +13,9 @@
 	String initQueryForEdited = "select esf.edited_speech_file_id, esf.file_name, esf.editing_app_name, esf.recording_mode, esf.recording_quality, esf.file_type, sd.smart_device_model_name, sd.smart_device_model_number, osd.os_name, osd.os_version\n"
 			+ "from edited_speech_file esf, recording_editing_device red, smart_device sd, os_for_smart_devices osd\n"
 			+ "where esf.editing_device_id=red.recording_editing_device_id and red.smart_device_id = sd.smart_device_id and red.os_id = osd.os_id;";
+	ArrayList<String> query = new ArrayList<>(Arrays.asList(initQueryForOriginal, initQueryForEdited));
+	Integer index = 1;
+	String editing_app_name;
 %>
 <!DOCTYPE html>
 <html lang="ko">
@@ -78,20 +81,28 @@
 				Class.forName("com.mysql.cj.jdbc.Driver");
 				conn = DriverManager.getConnection(url, user, password);
 				stmt = conn.createStatement();
-				rs = stmt.executeQuery(initQueryForOriginal);
-				while (rs.next()) {
+				for(int i=0;i<query.size();i++){
+					rs = stmt.executeQuery(query.get(i));
+					while (rs.next()) {
+						try{
+							editing_app_name = rs.getString("editing_app_name");
+						}catch(Exception e){
+							editing_app_name = "원본";
+						}
 			%>
-			<tr>
-				<td>index</td>
-				<td><%=rs.getString("file_name")%></td>
-				<td><%=rs.getString("file_type")%></td>
-				<td><%=rs.getString("smart_device_model_name")%></td>
-				<td><%=rs.getString("smart_device_model_number")%></td>
-				<td><%=rs.getString("os_name") + " " + rs.getString("os_version")%></td>
-				<td><%=rs.getString("recording_mode") + " / " + rs.getString("recording_quality")%></td>
-				<td>원본</td>
-			</tr>
+						<tr>
+							<td><%=index%></td>
+							<td><%=rs.getString("file_name")%></td>
+							<td><%=rs.getString("file_type")%></td>
+							<td><%=rs.getString("smart_device_model_name")%></td>
+							<td><%=rs.getString("smart_device_model_number")%></td>
+							<td><%=rs.getString("os_name") + " " + rs.getString("os_version")%></td>
+							<td><%=rs.getString("recording_mode") + " / " + rs.getString("recording_quality")%></td>
+							<td><%=editing_app_name%></td>
+						</tr>
 			<%
+						index++;
+					}
 				}
 			} catch (SQLException se) {
 			se.printStackTrace();

@@ -19,9 +19,10 @@ public class metaDataFromDBServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String fileId = request.getParameter("fileId");
 		String fileType = request.getParameter("fileType");
+		System.out.println("metaDataFromDBServlet - " + fileId + " - " + fileType);
 		try {
 			PrintWriter out = response.getWriter();
-			//System.out.println(MetaDataDAO.getMetaDataID(fileId, fileType));
+			System.out.println(MetaDataDAO.getMetaDataID(fileId, fileType));
 			out.print(MetaDataDAO.getMetaDataID(fileId, fileType));
 			out.flush();
 		} catch (ParserConfigurationException | IOException | TransformerException e) {

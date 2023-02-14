@@ -1,3 +1,4 @@
+/*
 function getFileListFromDB(query) {
 	$.ajax({
 		method: "POST",
@@ -18,8 +19,34 @@ function getFileListFromDB(query) {
 		}
 	})
 }
+*/
+
+function getFileListFromDB(queryForOriginal, queryForEdited) {
+	var query = [queryForOriginal, queryForEdited]
+	$.ajax({
+		method: "POST",
+		url: '/fileListServlet; charset=utf-8',
+		dataType: 'text',
+		data: {
+			sqlQuery : query
+		},
+		complete: function(data) {
+			console.log(data.responseText.replace("[","{").replace(/]$/, '}'))
+			console.log(JSON.parse(data.responseText.replace("[","{").replace(/]$/, '}')))
+			makeFileListFromDB(JSON.parse(data.responseText.replace("[","{").replace(/]$/, '}')))
+		},
+		error: function(request, status, error) {
+			console.log(request.responseText)
+			console.log(status.responseText)
+			console.log(error.responseText)
+			alert("ajax 에러 발생")
+			return
+		}
+	})
+}
 
 function makeFileListFromDB(data){
+	//console.log(data)
 	var index = 1;
 	for(key in data){
 		var exportdata = Object.entries(data[key])
