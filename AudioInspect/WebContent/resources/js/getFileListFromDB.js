@@ -22,7 +22,15 @@ function getFileListFromDB(query) {
 */
 
 function getFileListFromDB(queryForOriginal, queryForEdited) {
-	var query = [queryForOriginal, queryForEdited]
+	//var query = [queryForOriginal, queryForEdited]
+	var query = []
+	if(queryForOriginal != undefined){
+		query.push(queryForOriginal)
+	}
+	if(queryForEdited != undefined){
+		query.push(queryForEdited)
+	}
+	console.log(query)
 	$.ajax({
 		method: "POST",
 		url: '/fileListServlet; charset=utf-8',
@@ -31,8 +39,7 @@ function getFileListFromDB(queryForOriginal, queryForEdited) {
 			sqlQuery : query
 		},
 		complete: function(data) {
-			console.log(data.responseText.replace("[","{").replace(/]$/, '}'))
-			console.log(JSON.parse(data.responseText.replace("[","{").replace(/]$/, '}')))
+			//JSON.parse()하면 original, edited 출력 순서가 바뀜
 			makeFileListFromDB(JSON.parse(data.responseText.replace("[","{").replace(/]$/, '}')))
 		},
 		error: function(request, status, error) {
