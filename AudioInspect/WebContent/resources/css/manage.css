@@ -131,14 +131,6 @@ ul {
 	border: 1px solid #444444;
 }
 
-.fileListFromDB{
-	background-color: white;
-}
-
-.fileListFromDB.beSelected{
-	background-color: #aeebfa;
-}
-
 .search_text {
 	width: 60%;
 	background-color: white;
@@ -308,6 +300,10 @@ table.table-striped tbody tr:nth-of-type(odd) {
 
 table.table-striped.table-hover tbody tr:hover {
 	background: #f5f5f5;
+}
+
+.fileListFromDB.beSelected{
+	background-color: #aeebfa !important;
 }
 
 table.table th i {

@@ -7,14 +7,13 @@
 	String url = "jdbc:mysql://localhost:3306/audioinspect?serverTimezone=UTC";
 	String user = "root";
 	String password = "1234";
-	String initQueryForOriginal = "select sf.file_name, sf.recording_mode, sf.recording_quality, sf.file_type, sd.smart_device_model_name, sd.smart_device_model_number, osd.os_name, osd.os_version\n"
+	String initQueryForOriginal = "select sf.original_speech_file_id, sf.file_name, sf.recording_mode, sf.recording_quality, sf.file_type, sd.smart_device_model_name, sd.smart_device_model_number, osd.os_name, osd.os_version\n"
 			+ "from original_speech_file sf, recording_editing_device red, smart_device sd, os_for_smart_devices osd\n"
-			+ "where sf.recording_device_id=red.recording_editing_device_id and red.smart_device_id = sd.smart_device_id and red.os_id = osd.os_id;";
+			+ "where sf.recording_device_id=red.recording_editing_device_id and red.smart_device_id = sd.smart_device_id and red.os_id = osd.os_id";
 	String initQueryForEdited = "select esf.edited_speech_file_id, esf.file_name, esf.editing_app_name, esf.recording_mode, esf.recording_quality, esf.file_type, sd.smart_device_model_name, sd.smart_device_model_number, osd.os_name, osd.os_version\n"
 			+ "from edited_speech_file esf, recording_editing_device red, smart_device sd, os_for_smart_devices osd\n"
 			+ "where esf.editing_device_id=red.recording_editing_device_id and red.smart_device_id = sd.smart_device_id and red.os_id = osd.os_id;";
 	ArrayList<String> query = new ArrayList<>(Arrays.asList(initQueryForOriginal, initQueryForEdited));
-	String editing_app_name;
 %>
 <!DOCTYPE html>
 <html lang="ko">
@@ -35,6 +34,7 @@
 <script src="https://kit.fontawesome.com/a4a9a94dd2.js" crossorigin="anonymous"></script>
 <script src="resources/js/getFileListFromDB.js"></script>
 <script src="resources/js/getOptionFileListFromDB.js"></script>
+<script src="resources/js/fileManageForDB.js"></script>
 </head>
 <title>AudioInspect File Manage</title>
 <body>
@@ -352,16 +352,20 @@
 				conn = DriverManager.getConnection(url, user, password);
 				stmt = conn.createStatement();
 				Integer index = 1;
+				String file_id;
+				String editing_app_name;
 				for (int i = 0; i < query.size(); i++) {
 					rs = stmt.executeQuery(query.get(i));
 					while (rs.next()) {
-				try {
-					editing_app_name = rs.getString("editing_app_name");
-				} catch (Exception e) {
-					editing_app_name = "원본";
-				}
+						try {
+							file_id = Integer.toString(rs.getInt("edited_speech_file_id"));
+							editing_app_name = rs.getString("editing_app_name");
+						} catch (Exception e) {
+							file_id = "원본" + Integer.toString(rs.getInt("original_speech_file_id"));
+							editing_app_name = "원본";
+						}
 			%>
-						<tr>
+						<tr id = "<%= file_id %>" class = "fileListFromDB" onclick = "beSelectedFile($(this))">
 							<td><%=index%></td>
 							<td><%=rs.getString("file_name")%></td>
 							<td><%=rs.getString("file_type")%></td>
