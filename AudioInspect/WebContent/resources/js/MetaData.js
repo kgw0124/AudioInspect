@@ -19,12 +19,12 @@ function StandMetaData(file) {
 		complete: function(data) {
 			dataList = data.responseText.replaceAll("[", "").replaceAll("]", "").split(",")
 			xml = dataList[1].split("\n")
-			xml.splice(0,10)
+			xml.splice(0, 10)
 			getStandMetaDataTreeFromXML(xml)
 			//standardfilesData.metaData: fileManage.js에서 호출
 			standardfilesData.metaData.push(xml)
-			
-			
+
+
 		},
 		error: function(request, status, error) {
 			console.log(request.responseText);
@@ -59,9 +59,9 @@ function CompMetaData(file) {
 			getCompMetaDataTreeFromXML(dataList[0], xml)
 			//comparefilesData.metaData: fileManage.js에서 호출
 			var index = comparefilesData.fileName.indexOf(dataList[0])
-			comparefilesData.metaData[index]= xml
-			
-			
+			comparefilesData.metaData[index] = xml
+
+
 		},
 		error: function(request, status, error) {
 			console.log(request.responseText);
@@ -73,8 +73,7 @@ function CompMetaData(file) {
 	})
 }
 
-
-function MetaDataFromDB(standOrCompare, selectedFileName, selectedFileId, selectedFileType) {
+function StandMetaDataFromDB(selectedFileId, selectedFileType) {
 	$.ajax({
 		method: "POST",
 		url: '/metaDataFromDBServlet',
@@ -84,30 +83,11 @@ function MetaDataFromDB(standOrCompare, selectedFileName, selectedFileId, select
 			fileType: selectedFileType
 		},
 		success: function(data) {
-			//data = data.responseText
-			switch (standOrCompare) {
-				case "standard":
-					xml = data.split("\n")
-					xml.splice(0, 4)
-					getStandMetaDataTreeFromXML(xml)
-					//standardfilesData.metaData: fileManage.js에서 호출
-					standardfilesData.metaData.push(xml)
-					break
-				case "compare":
-					xml = data.split("\n")
-					xml.splice(0, 4)
-					getCompMetaDataTreeFromXML(selectedFileName, xml)
-					//comparefilesData.metaData: fileManage.js에서 호출
-					var index = comparefilesData.fileName.indexOf(selectedFileName)
-					comparefilesData.metaData[index] = xml
-
-					console.log("1. 파일 이름 : " + selectedFileName)
-					console.log("2. index : " + index)
-					console.log("3. comparefilesData.fileName : " + comparefilesData.fileName[index])
-					console.log("4. xml : " + xml)
-					console.log("5. data : " + data)
-					break
-			}
+			xml = data.split("\n")
+			xml.splice(0, 4)
+			getStandMetaDataTreeFromXML(xml)
+			//standardfilesData.metaData: fileManage.js에서 호출
+			standardfilesData.metaData.push(xml)
 		},
 		error: function(xhr, request, status, error) {
 			console.log(xhr)
@@ -120,51 +100,40 @@ function MetaDataFromDB(standOrCompare, selectedFileName, selectedFileId, select
 	})
 }
 
-
-/*
-function MetaDataFromDB(standOrCompare, selectedFileName, selectedFileId, selectedFileType) {
-	$.ajax({
-		method: "POST",
-		url: '/metaDataFromDBServlet; charset=utf-8',
-		dataType: 'text',
-		data: {
-			fileId: selectedFileId,
-			fileType: selectedFileType
-		},
-		complete: function(data) {
-			data = data.responseText
-			switch(standOrCompare){
-				case "standard":
-					xml = data.split("\n")
-					xml.splice(0, 4)
-					getStandMetaDataTreeFromXML(xml)
-					//standardfilesData.metaData: fileManage.js에서 호출
-					standardfilesData.metaData.push(xml)
-					break
-				case "compare":
-					xml = data.split("\n")
-					xml.splice(0, 4)
-					getCompMetaDataTreeFromXML(selectedFileName, xml)
-					//comparefilesData.metaData: fileManage.js에서 호출
-					var index = comparefilesData.fileName.indexOf(selectedFileName)
-					comparefilesData.metaData[index] = xml
-					
-					console.log("파일 이름 : " + selectedFileName)
-					console.log("index : " + index)
-					console.log("comparefilesData.fileName : " + comparefilesData.fileName[index])
-					break				
+function CompMetaDataFromDB(beSelectedFileForCompare) {
+	for (var i = 0; i < beSelectedFileForCompare.length; i++) {
+		$.ajax({
+			method: "POST",
+			url: '/metaDataFromDBServlet',
+			async: false,
+			dataType: "text",
+			data: {
+				fileId: beSelectedFileForCompare[i].fileId,
+				fileType: beSelectedFileForCompare[i].fileType
+			},
+			success: function(data) {
+				xml = data.split("\n")
+				xml.splice(0, 4)
+				getCompMetaDataTreeFromXML(beSelectedFileForCompare[i].fileName, xml)
+				//comparefilesData.metaData: fileManage.js에서 호출
+				var index = comparefilesData.fileName.indexOf(beSelectedFileForCompare[i].fileName)
+				comparefilesData.metaData[index] = xml
+			},
+			error: function(xhr, request, status, error) {
+				console.log(xhr)
+				console.log(request)
+				console.log(status)
+				console.log(error)
+				alert("ajax 에러 발생");
+				return;
 			}
-		},
-		error: function(request, status, error) {
-			console.log(request.responseText);
-			console.log(status.responseText);
-			console.log(error.responseText);
-			alert("ajax 에러 발생");
-			return;
+		})
+		function trigerclick() {
+			$('.tab-link.current').trigger("click")
 		}
-	})
+		setTimeout(trigerclick, 3000)
+	}
 }
-*/
 
 function getStandMetaDataTreeFromXML(xml) {
 	var comparemethod = document.querySelector(".compare_button.current").value
