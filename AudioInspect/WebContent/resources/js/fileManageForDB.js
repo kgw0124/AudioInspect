@@ -23,5 +23,5 @@ function beSelectedFile(row) {
 			beSelectedFileForManageDB.push(fileSet)
 			break
 	}
-	console.log(beSelectedFileForManageDB)
+	//console.log(beSelectedFileForManageDB)
 }

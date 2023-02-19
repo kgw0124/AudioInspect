@@ -35,6 +35,7 @@
 <script src="resources/js/getFileListFromDB.js"></script>
 <script src="resources/js/getOptionFileListFromDB.js"></script>
 <script src="resources/js/fileManageForDB.js"></script>
+<script src="resources/js/editFile2DatabaseModal.js"></script>
 </head>
 <title>AudioInspect File Manage</title>
 <body>
@@ -321,7 +322,7 @@
 		<button href="#deleteModal" class="button_delete" data-toggle="modal">
 			<i class="material-icons">&#xE15C;</i> <span>삭제</span>
 		</button>
-		<button href="#editModal" class="button_edit" data-toggle="modal">
+		<button onclick="editFile2DB()" class="button_edit" data-toggle="modal">
 			<i class="material-icons">&#xE3C9;</i> <span>수정</span>
 		</button>
 		<button href="#reset" class="button_reset">
@@ -501,17 +502,21 @@
 					</div>
 					<div class="modal-body">
 
-						<div class="form-group">
-							<p>선택한 파일 이름 :</p>
+						<div id="editModal_selectedFileName" class="form-group">
 						</div>
+						
 						<div class="form-group">
 							<p>
 								<b>파일 편집 여부</b>
 							</p>
-							<label><input type="radio" id="orign" name="chk_info"
-								value="원본" checked="checked" onchange="setDisplay()">원본</label>
-							<label><input type="radio" id="edit" name="chk_info"
-								value="편집본" onchange="setDisplay()">편집본</label>
+							<label>
+								<input type="radio" id="orign" name="chk_info" value="원본" checked="checked" onchange="setDisplay()">
+								원본
+							</label>
+							<label>
+								<input type="radio" id="edit" name="chk_info" value="편집본" onchange="setDisplay()">
+								편집본
+							</label>
 						</div>
 						<div class="form-group">
 							<p>
@@ -588,6 +593,7 @@
 			</div>
 		</div>
 	</div>
+	
 	<!-- Delete Modal HTML -->
 	<div id="deleteModal" class="modal fade">
 		<div class="modal-dialog">
