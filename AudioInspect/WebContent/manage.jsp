@@ -22,7 +22,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link rel="stylesheet"	href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 <script	src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src="/resources/vendor/bootstrap/js/bootstrap.min.js"></script>
 <link rel="stylesheet" href="resources/css/manage.css">
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script	src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
@@ -35,6 +34,7 @@
 <script src="resources/js/getFileListFromDB.js"></script>
 <script src="resources/js/getOptionFileListFromDB.js"></script>
 <script src="resources/js/fileManageForDB.js"></script>
+<script src="resources/js/addFile2DatabaseModal.js"></script>
 <script src="resources/js/editFile2DatabaseModal.js"></script>
 </head>
 <title>AudioInspect File Manage</title>
@@ -316,7 +316,7 @@
 	</script>
 
 	<div class="button_method">
-		<button href="#addModal" class="button_add" data-toggle="modal">
+		<button onclick="addFile2DB()" class="button_add" data-toggle="modal">
 			<i class="material-icons">&#xE147;</i> <span>추가</span>
 		</button>
 		<button href="#deleteModal" class="button_delete" data-toggle="modal">
@@ -407,17 +407,18 @@
 						<h4 class="modal-title">Add</h4>
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 					</div>
-					<div class="modal-body">
+					<!-- 원본 파일 Add Modal -->
+					<div id="add-modal-body-origin" class="modal-body">
 						<div class="form-group">
 							<p>
 								<b>파일 편집 여부</b>
 							</p>
 							<label>
-								<input type="radio" id="orign" name="chk_info" value="원본" checked="checked" onchange="setDisplay()">
+								<input type="radio" id="add-modal-body-origin-radio" name="chk_info" value="원본" checked="checked">
 								원본
 							</label>
 							<label>
-								<input type="radio" id="edit" name="chk_info" value="편집본" onchange="setDisplay()">
+								<input type="radio" name="chk_info" value="편집본" onchange="change2edit_add()">
 								편집본
 							</label>
 						</div>
@@ -482,6 +483,120 @@
 							<input type="text" class="form-control" required>
 						</div>
 					</div>
+					<!-- 편집 파일 Add Modal -->
+					<div id="add-modal-body-edit" class="modal-body" style="display: none">
+						<div class="form-group">
+							<p>
+								<b>파일 편집 여부</b>
+							</p>
+							<label>
+								<input type="radio" name="chk_info" value="원본" onchange="change2origin_add()">
+								원본
+							</label>
+							<label>
+								<input type="radio" id="add-modal-body-edit-radio" name="chk_info" value="편집본">
+								편집본
+							</label>
+						</div>
+						<div class="form-group">
+							<p>
+								<b>파일 경로</b>
+							</p>
+							<input type="file" name="profile" accept=".m4a">
+						</div>
+						<div class="form-group">
+							<p>
+								<b>원본파일 찾기 </b> 
+								<a> (선택) 원본 파일을 검색합니다.</a>
+							</p>
+							<input type="file" name="profile" accept=".m4a">
+						</div>
+						<div class="form-group">
+							<p>
+								<b>편집 소프트웨어 명 *</b>
+							</p>
+							<input type="text" class="form-control" required>
+						</div>
+						<div class="form-group">
+							<p>
+								<b>편집 소프트웨어 버전 *</b>
+							</p>
+							<input type="text" class="form-control" required>
+						</div>
+						<div class="form-group">
+							<p>
+								<b>편집 방법</b>
+							</p>
+							<input type="text" class="form-control">
+						</div>
+						<div class="form-group">
+							<p>
+								<b>편집 기기 OS 이름</b>
+							</p>
+							<input type="text" class="form-control">
+						</div>
+						<div class="form-group">
+							<p>
+								<b>편집 OS 버전 정보</b>
+							</p>
+							<input type="text" class="form-control">
+						</div>
+						<div class="form-group">
+							<p>
+								<b>녹음 기종명 *</b>
+							</p>
+							<input type="text" class="form-control" required>
+						</div>
+						<div class="form-group">
+							<p>
+								<b>녹음 기종 넘버 *</b>
+							</p>
+							<input type="text" class="form-control" required>
+						</div>
+						<div class="form-group">
+							<p>
+								<b>파일 이름 *</b>
+							</p>
+							<input type="text" class="form-control" required>
+						</div>
+						<div class="form-group">
+							<p>
+								<b>녹음 기기 제조사 *</b>
+							</p>
+							<select id="device" required>
+								<option value="ios">IOS</option>
+								<option value="android">Android</option>
+							</select>
+						</div>
+						<div class="form-group">
+							<p>
+								<b>녹음 os 이름 *</b>
+							</p>
+							<select id="device" required>
+								<option value="ios">IOS</option>
+								<option value="android">Android</option>
+							</select>
+						</div>
+						<div class="form-group">
+							<p>
+								<b>녹음 os 버전 정보 *</b>
+							</p>
+							<input type="text" class="form-control">
+						</div>
+						<div class="form-group">
+							<p>
+								<b>녹음 모드</b>
+							</p>
+							<input type="text" class="form-control">
+						</div>
+						<div class="form-group">
+							<p>
+								<b>녹음 퀄리티</b>
+							</p>
+							<input type="text" class="form-control">
+						</div>
+					</div>
+					<!-- 완료 버튼 -->
 					<div class="modal-footer">
 						<input type="submit" class="btn btn-success" value="Add">
 					</div>
@@ -497,24 +612,20 @@
 				<form>
 					<div class="modal-header">
 						<h4 class="modal-title">Edit</h4>
-						<button type="button" class="close" data-dismiss="modal"
-							aria-hidden="true">&times;</button>
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 					</div>
-					<div class="modal-body">
-
-						<div id="editModal_selectedFileName" class="form-group">
-						</div>
-						
+					<!-- 원본 파일 수정 -->
+					<div id="edit-modal-body-origin" class="modal-body">
 						<div class="form-group">
 							<p>
 								<b>파일 편집 여부</b>
 							</p>
 							<label>
-								<input type="radio" id="orign" name="chk_info" value="원본" checked="checked" onchange="setDisplay()">
+								<input type="radio" id="edit-modal-body-origin-radio" name="chk_info" value="원본">
 								원본
 							</label>
 							<label>
-								<input type="radio" id="edit" name="chk_info" value="편집본" onchange="setDisplay()">
+								<input type="radio" name="chk_info" value="편집본" disabled="disabled">
 								편집본
 							</label>
 						</div>
@@ -585,7 +696,115 @@
 							<input type="text" class="form-control" required>
 						</div>
 					</div>
+					<!-- 편집 파일 수정 -->
+					<div id="edit-modal-body-edit" class="modal-body">
+						<div class="form-group">
+							<p>
+								<b>파일 편집 여부</b>
+							</p>
+							<label>
+								<input type="radio" name="chk_info" value="원본" disabled="disabled">
+								원본
+							</label>
+							<label>
+								<input type="radio" id="edit-modal-body-edit-radio" name="chk_info" value="편집본">
+								편집본
+							</label>
+						</div>
+						<div class="form-group">
+							<p>
+								<b>파일명</b>
+							</p>
+							<input type="text" class="form-control" required>
+						</div>
 
+						<div class="form-group">
+							<p>
+								<b>기종 모델 넘버</b>
+							</p>
+							<input type="text" class="form-control" required>
+						</div>
+
+						<div class="form-group">
+							<p>
+								<b>OS 종류</b>
+							</p>
+							<select id="device" required>
+								<option value="ios">IOS</option>
+								<option value="android">Android</option>
+							</select>
+						</div>
+
+						<div class="form-group">
+							<p>
+								<b>OS 버전</b>
+							</p>
+							<input type="text" class="form-control" required>
+						</div>
+
+						<div class="form-group">
+							<p>
+								<b>녹음 모드</b>
+							</p>
+							<input type="text" class="form-control">
+						</div>
+
+
+						<div class="form-group">
+							<p>
+								<b>녹음 퀄리티</b>
+							</p>
+							<input type="text" class="form-control">
+						</div>
+
+						<div class="form-group">
+							<p>
+								<b>녹음 소프트웨어명</b>
+							</p>
+							<input type="text" class="form-control">
+						</div>
+
+						<div class="form-group">
+							<p>
+								<b>녹음 소프트웨어 버전</b>
+							</p>
+							<input type="text" class="form-control">
+						</div>
+
+						<div class="form-group">
+							<p>
+								<b>원본 파일</b>
+							</p>
+							<input type="file" name="profile" accept=".m4a">
+						</div>
+						<div class="form-group">
+							<p>
+								<b>편집 소프트웨어 명</b>
+							</p>
+							<input type="text" class="form-control">
+						</div>
+
+						<div class="form-group">
+							<p>
+								<b>편집 소프트웨어 버전</b>
+							</p>
+							<input type="text" class="form-control">
+						</div>
+						<div class="form-group">
+							<p>
+								<b>편집 소프트웨어 제조사</b>
+							</p>
+							<input type="text" class="form-control">
+						</div>
+						<div class="form-group">
+							<p>
+								<b>편집 방법</b>
+							</p>
+							<input type="text" class="form-control"
+								style="width: 300px; height: 200px;">
+						</div>
+					</div>
+					<!-- 완료 버튼 -->
 					<div class="modal-footer">
 						<input type="submit" class="btn btn-info" value="Save">
 					</div>
