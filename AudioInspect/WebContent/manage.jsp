@@ -633,14 +633,21 @@
 							<p>
 								<b>파일명</b>
 							</p>
-							<input type="text" class="form-control" required>
+							<input type="text" id="edit-modal-body-origin-fileName" class="form-control" required>
 						</div>
-
+						
+						<div class="form-group">
+							<p>
+								<b>기종 모델명</b>
+							</p>
+							<input type="text" id="edit-modal-body-origin-fileModel" class="form-control" required>
+						</div>
+						
 						<div class="form-group">
 							<p>
 								<b>기종 모델 넘버</b>
 							</p>
-							<input type="text" class="form-control" required>
+							<input type="text" id="edit-modal-body-origin-fileModelNumber" class="form-control" required>
 						</div>
 
 						<div class="form-group">
@@ -648,8 +655,8 @@
 								<b>os 종류</b>
 							</p>
 							<select id="device">
-								<option value="ios">IOS</option>
-								<option value="android">Android</option>
+								<option id="edit-modal-body-origin-fileOS-ios" value="ios">IOS</option>
+								<option id="edit-modal-body-origin-fileOS-android" value="android">Android</option>
 							</select>
 						</div>
 
@@ -657,14 +664,14 @@
 							<p>
 								<b>os 버전</b>
 							</p>
-							<input type="text" class="form-control" required>
+							<input type="text" id="edit-modal-body-origin-fileOSVersion" class="form-control" required>
 						</div>
 
 						<div class="form-group">
 							<p>
 								<b>녹음 모드</b>
 							</p>
-							<input type="text" class="form-control" required>
+							<input type="text" id="edit-modal-body-origin-fileRecordMode" class="form-control" required>
 						</div>
 
 
@@ -672,7 +679,7 @@
 							<p>
 								<b>녹음 퀄리티</b>
 							</p>
-							<input type="text" class="form-control" required>
+							<input type="text" id="edit-modal-body-origin-fileRecordQuality" class="form-control" required>
 						</div>
 
 						<div class="form-group">
@@ -715,14 +722,21 @@
 							<p>
 								<b>파일명</b>
 							</p>
-							<input type="text" class="form-control" required>
+							<input type="text" id="edit-modal-body-edit-fileName" class="form-control" required>
 						</div>
-
+						
+						<div class="form-group">
+							<p>
+								<b>기종 모델명</b>
+							</p>
+							<input type="text" id="edit-modal-body-edit-fileModel" class="form-control" required>
+						</div>
+						
 						<div class="form-group">
 							<p>
 								<b>기종 모델 넘버</b>
 							</p>
-							<input type="text" class="form-control" required>
+							<input type="text" id="edit-modal-body-edit-fileModelNumber" class="form-control" required>
 						</div>
 
 						<div class="form-group">
@@ -730,8 +744,8 @@
 								<b>OS 종류</b>
 							</p>
 							<select id="device" required>
-								<option value="ios">IOS</option>
-								<option value="android">Android</option>
+								<option id="edit-modal-body-edit-fileOS-ios" value="ios">IOS</option>
+								<option id="edit-modal-body-edit-fileOS-android" value="android">Android</option>
 							</select>
 						</div>
 
@@ -739,14 +753,14 @@
 							<p>
 								<b>OS 버전</b>
 							</p>
-							<input type="text" class="form-control" required>
+							<input type="text" id="edit-modal-body-edit-fileOSVersion" class="form-control" required>
 						</div>
 
 						<div class="form-group">
 							<p>
 								<b>녹음 모드</b>
 							</p>
-							<input type="text" class="form-control">
+							<input type="text" id="edit-modal-body-edit-fileRecordMode" class="form-control">
 						</div>
 
 
@@ -754,7 +768,7 @@
 							<p>
 								<b>녹음 퀄리티</b>
 							</p>
-							<input type="text" class="form-control">
+							<input type="text" id="edit-modal-body-edit-fileRecordQuality" class="form-control">
 						</div>
 
 						<div class="form-group">

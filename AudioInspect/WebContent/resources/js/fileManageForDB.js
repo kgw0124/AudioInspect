@@ -15,10 +15,14 @@ function beSelectedFile(row) {
 			row.addClass('beSelected')
 			var fileSet = {
 				fileId: row.attr('id'),
-				fileName: td[1].innerHTML,
 				fileSize: "None",
+				fileLocation: "DB",
+				fileName: td[1].innerHTML,
 				fileType: td[2].innerHTML,
-				fileLocation: "DB"
+				fileModel: td[3].innerHTML,
+				fileModelNumber: td[4].innerHTML,
+				fileOS: td[5].innerHTML,
+				fileRecordMode: td[6].innerText				
 			}
 			beSelectedFileForManageDB.push(fileSet)
 			break
