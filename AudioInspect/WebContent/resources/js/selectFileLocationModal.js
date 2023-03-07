@@ -10,7 +10,7 @@ function selectStandardFileLocation() {
             </div>
             <div id = "fileLocationButtons">
                <input type="button" value="DB에서 파일 선택" onclick="modal_view()"/>
-               <input type="file" id="standardfilebox" name="upload" style="display: none" accept=".m4a"/>
+               <input type="file" id="standardfilebox" name="upload" style="display: none" accept=".wav, .flac, .3gp, .3ga, .mp3, .amr, .m4a"/>
                <label class="standardfilelabel" for="standardfilebox">파일 탐색기</label>
             </div>
          </div>
@@ -41,7 +41,7 @@ function selectCompareFileLocation() {
             </div>
             <div id = "fileLocationButtons">
                <input type="button" value="DB에서 파일 선택" onclick="modal_view()"/>
-               <input type="file" id="comparefilebox" style="display: none" multiple="multiple" accept=".m4a"> 
+               <input type="file" id="comparefilebox" style="display: none" multiple="multiple" accept=".wav, .flac, .3gp, .3ga, .mp3, .amr, .m4a"> 
                <label for="comparefilebox">파일 탐색기</label>
             </div>
          </div>
